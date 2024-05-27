@@ -73,6 +73,19 @@ export const LoginModal = () => {
         </div>
         <div className="flex flex-col p-5 gap-5">
           <div className="flex flex-col gap-2">
+            <div className="bg-orange-100 p-2 rounded">
+              <p className="mb-1">
+                Test etmek için aşağıdaki bilgilerle giriş sağlayabilirsiniz:
+              </p>
+              <p>
+                mail: <b>test@gmail.com</b>
+              </p>
+              <p>
+                şifre:
+                <b> 123123</b>
+              </p>
+            </div>
+
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
               <input
                 className="bg-orange-100 p-2"

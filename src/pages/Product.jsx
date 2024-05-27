@@ -17,6 +17,7 @@ import { getCommentsData } from "../redux/commentSlice";
 
 export const Product = () => {
   const { comments } = useSelector((state) => state.commentSlice);
+  const { isLogin } = useSelector((state) => state.authSlice);
 
   const { id } = useParams();
 
@@ -56,7 +57,13 @@ export const Product = () => {
                   isSold={product.isSold}
                 />
                 <div className="flex-1 flex flex-col gap-4 mb-5">
-                  <NewCommentBox productId={id} />
+                  {isLogin ? (
+                    <NewCommentBox productId={id} />
+                  ) : (
+                    <div className="shadow-lg bg-white p-4 flex flex-col gap-6">
+                      Yorum yapmak için giriş yapın.
+                    </div>
+                  )}
                   <div className="shadow-lg bg-white p-4 flex flex-col gap-6">
                     <b>Yorumlar</b>
                     <div className="flex flex-col-reverse gap-6">
