@@ -32,18 +32,14 @@ function App() {
 
   // const { id } = otherUserData;
 
-  useEffect(() => {
-    const getData = async () => {
-      const docRef = doc(db, "users", otherUserData.id);
-      const docSnap = await getDoc(docRef);
-      const balance = docSnap.data().balance;
-      const shoppingCart = docSnap.data().shoppingCart;
-      shoppingCart.forEach((i) => {
-        dispatch(addShoppingCart(i));
-      });
-      dispatch(increaseBalance(balance));
-    };
+  const getData = async () => {
+    const docRef = doc(db, "users", otherUserData.id);
+    const docSnap = await getDoc(docRef);
+    const balance = docSnap.data().balance;
+    dispatch(increaseBalance(balance));
+  };
 
+  useEffect(() => {
     if (isLogin) getData();
   }, []);
 

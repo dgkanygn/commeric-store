@@ -80,7 +80,7 @@ export const ShoppingCartModal = () => {
             defineConfirmModal({
               transaction: "Satın alma işlemi",
               label: `Bu satın almayı onaylıyor musunuz? Hesabınızdan ${totalPrice} TL eksilecek.`,
-              process: "PURCHASING",
+              process: "BUY_PRODUCT",
               id: sellerPriceArr,
             })
           );

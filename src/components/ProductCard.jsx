@@ -36,12 +36,12 @@ export const ProductCard = ({
       dispatch(addShoppingCart(product));
       toast.success("İşlem başarıyla gerçekleştirildi");
 
-      const docRef = doc(db, "users", otherUserData.id);
-      const docSnap = await getDoc(docRef);
-      const docData = docSnap.data();
-      let shoppingCart = docData.shoppingCart;
-      shoppingCart.push(product);
-      await updateDoc(docRef, { shoppingCart });
+      // const docRef = doc(db, "users", otherUserData.id);
+      // const docSnap = await getDoc(docRef);
+      // const docData = docSnap.data();
+      // let shoppingCart = docData.shoppingCart;
+      // shoppingCart.push(product);
+      // await updateDoc(docRef, { shoppingCart });
     } else toast.error("Bu ürün satıldı.");
   };
 

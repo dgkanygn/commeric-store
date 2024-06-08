@@ -108,7 +108,7 @@ export const Home = () => {
     dispatch(filterProducts({ category }));
   };
 
-  console.log(formData.category);
+  // console.log(formData.category);
   useEffect(() => {
     if (
       formData.price > 0 ||

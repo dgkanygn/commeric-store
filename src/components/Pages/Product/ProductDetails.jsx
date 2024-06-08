@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 // component
 import { Button } from "../../Button";
@@ -11,15 +11,16 @@ import { openModal } from "../../../redux/modal";
 import { defineConfirmModal } from "../../../redux/confirmModalSlice";
 
 export const ProductDetails = ({
+  id,
   brand,
   model,
-  category,
   price,
+  seller,
+  isSold,
+  category,
   isSecondHand,
   description,
-  seller,
-  id,
-  isSold,
+  userDocId,
 }) => {
   const dispatch = useDispatch();
 
@@ -30,7 +31,17 @@ export const ProductDetails = ({
   const isShowButton = isOwner && isLogin;
 
   const toggleShoppingCart = () => {
-    dispatch(addShoppingCart({ id, brand, model, price }));
+    // const product = {
+    //   id,
+    //   brand,
+    //   model,
+    //   imageUrls,
+    //   price,
+    //   seller,
+    //   userDocId,
+    // };
+
+    dispatch(addShoppingCart({ id, brand, model, price, seller, userDocId }));
     toast.success("İşlem başarıyla gerçekleştirildi");
   };
 

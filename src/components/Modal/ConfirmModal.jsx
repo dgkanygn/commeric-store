@@ -35,63 +35,79 @@ export const ConfirmModal = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const deleteComment = async () => {
+    const docRef = doc(db, "comments", id);
+    await deleteDoc(docRef);
+    toast.success("Yorumunuz silindi.");
+    dispatch(removeComment(id));
+    dispatch(resetConfirmation());
+    dispatch(closeModal());
+  };
+
+  const deleteProduct = async () => {
+    const docRef = doc(db, "products", id);
+    await deleteDoc(docRef);
+    dispatch(removeComment(id));
+    dispatch(resetConfirmation());
+    dispatch(closeModal());
+    navigate("/");
+    toast.success("Ürün silindi.");
+  };
+
+  const deleteProfile = async () => {
+    dispatch(logout());
+    const docRef = doc(db, "users", id.docId);
+    await deleteDoc(docRef);
+    const user = auth.currentUser;
+    await deleteUser(user);
+    dispatch(closeModal());
+    toast.success("Hesap başarıyla silindi!");
+  };
+
+  const buyProduct = async () => {
+    let totalPrice = 0;
+    for (const item of id) {
+      const itemId = item.user;
+      const docRef = doc(db, "users", itemId);
+      const docSnap = await getDoc(docRef);
+      const docData = docSnap.data();
+      let balance = docData.balance;
+      // console.log(balance)
+      let amount = parseInt(item.amount);
+      if (item.type === "seller") {
+        totalPrice += amount;
+        balance += amount;
+        await updateDoc(docRef, { balance });
+        const productDocRef = doc(db, "products", item.productDocId);
+        await updateDoc(productDocRef, { isSold: true });
+        let isRes = false;
+        products.map((product) => {
+          if (product.id === item.productDocId) isRes = true;
+        });
+        if (isRes) dispatch(markProduct(item.productDocId));
+      } else {
+        balance -= totalPrice;
+        await updateDoc(docRef, { balance });
+        dispatch(increaseBalance(balance));
+        dispatch(clearProducts());
+      }
+    }
+
+    dispatch(closeModal());
+    toast.success("Ödeme başarıyla gerçekleştirildi!");
+  };
+
   const handleConfirm = async () => {
     setIsLoading(true);
     if (process === "DELETE_COMMENT") {
-      const docRef = doc(db, "comments", id);
-      await deleteDoc(docRef);
-      toast.success("Yorumunuz silindi.");
-      dispatch(removeComment(id));
-      dispatch(resetConfirmation());
-      dispatch(closeModal());
+      await deleteComment();
     } else if (process === "DELETE_PRODUCT") {
-      const docRef = doc(db, "products", id);
-      await deleteDoc(docRef);
-      dispatch(removeComment(id));
-      dispatch(resetConfirmation());
-      dispatch(closeModal());
-      navigate("/");
-      toast.success("Ürün silindi.");
+      await deleteProduct();
     } else if (process === "DELETE_PROFILE") {
-      dispatch(logout());
-      const docRef = doc(db, "users", id.docId);
-      await deleteDoc(docRef);
-      const user = auth.currentUser;
-      await deleteUser(user);
-      dispatch(closeModal());
-      toast.success("Hesap başarıyla silindi!");
-    } else if (process === "PURCHASING") {
-      let totalPrice = 0;
-      for (const item of id) {
-        const itemId = item.user;
-        const docRef = doc(db, "users", itemId);
-        const docSnap = await getDoc(docRef);
-        const docData = docSnap.data();
-        let balance = docData.balance;
-        let amount = parseInt(item.amount);
-        if (item.type === "seller") {
-          totalPrice += amount;
-          balance += amount;
-          await updateDoc(docRef, { balance });
-          const productDocRef = doc(db, "products", item.productDocId);
-          await updateDoc(productDocRef, { isSold: true });
-          let isRes = false;
-          products.map((product) => {
-            if (product.id === item.productDocId) isRes = true;
-          });
-          if (isRes) dispatch(markProduct(item.productDocId));
-        } else {
-          balance -= totalPrice;
-          await updateDoc(docRef, { balance });
-          dispatch(increaseBalance(balance));
-          dispatch(clearProducts());
-        }
-      }
-
-      dispatch(closeModal());
-      toast.success("Ödeme başarıyla gerçekleştirildi!");
+      await deleteProfile();
+    } else if (process === "BUY_PRODUCT") {
+      await buyProduct();
     }
-
     setIsLoading(false);
   };
 

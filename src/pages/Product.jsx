@@ -23,6 +23,8 @@ export const Product = () => {
 
   const [product, setProduct] = useState({});
 
+  console.log(product);
+
   const dispatch = useDispatch();
 
   const getProduct = async () => {
@@ -55,6 +57,7 @@ export const Product = () => {
                   seller={product.seller}
                   id={id}
                   isSold={product.isSold}
+                  userDocId={product.userDocId}
                 />
                 <div className="flex-1 flex flex-col gap-4 mb-5">
                   {isLogin ? (
