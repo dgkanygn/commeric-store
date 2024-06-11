@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 // component
 import { NewCommentBox } from "../components/Pages/Product/NewCommentBox";
@@ -14,6 +14,7 @@ import { getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { getCommentsData } from "../redux/commentSlice";
+import Data from "../context/Data";
 
 export const Product = () => {
   const { comments } = useSelector((state) => state.commentSlice);
@@ -21,11 +22,13 @@ export const Product = () => {
 
   const { id } = useParams();
 
-  const [product, setProduct] = useState({});
+  // const [product, setProduct] = useState({});
 
-  console.log(product);
+  const { product, setProduct } = useContext(Data);
 
   const dispatch = useDispatch();
+
+  console.log(product);
 
   const getProduct = async () => {
     const result = await getDoc(doc(db, "products", id));

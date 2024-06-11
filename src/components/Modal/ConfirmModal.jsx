@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 // component
 import { CloseModalButton } from "./CloseModalButton";
@@ -21,6 +21,7 @@ import { deleteUser } from "firebase/auth";
 import { increaseBalance, logout } from "../../redux/authSlice";
 import { clearProducts } from "../../redux/shoppingCartSlice";
 import { markProduct } from "../../redux/productSlice";
+import Data from "../../context/Data";
 
 export const ConfirmModal = () => {
   const dispatch = useDispatch();
@@ -30,6 +31,8 @@ export const ConfirmModal = () => {
   const { label, transaction, isConfirmed, process, id } = useSelector(
     (state) => state.confirmModalSlice
   );
+
+  const { product, setProduct } = useContext(Data);
 
   const { products } = useSelector((state) => state.productSlice);
 
@@ -72,7 +75,6 @@ export const ConfirmModal = () => {
       const docSnap = await getDoc(docRef);
       const docData = docSnap.data();
       let balance = docData.balance;
-      // console.log(balance)
       let amount = parseInt(item.amount);
       if (item.type === "seller") {
         totalPrice += amount;
@@ -85,6 +87,7 @@ export const ConfirmModal = () => {
           if (product.id === item.productDocId) isRes = true;
         });
         if (isRes) dispatch(markProduct(item.productDocId));
+        setProduct({ ...product, isSold: true });
       } else {
         balance -= totalPrice;
         await updateDoc(docRef, { balance });
